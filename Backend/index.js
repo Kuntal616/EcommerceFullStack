@@ -1,12 +1,26 @@
 
+// Load environment variables from .env file
+require('dotenv').config();
+
 const express = require('express');
 const app = express();
+
+const PORT = process.env.PORT || 3000;
+
+const connectDB = require('./connection'); 
+// Connect to MongoDB
+connectDB();
+
+
+
 //routes
 const productsRoute = require('./routes/products');
 
 //middleware
 app.use(express.json());
-const PORT = process.env.PORT || 3000;
+app.use(express.urlencoded({ extended: false }));
+
+
 
 app.use('/api/products', productsRoute);
 
