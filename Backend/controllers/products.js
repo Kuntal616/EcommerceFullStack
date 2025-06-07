@@ -1,3 +1,4 @@
+
 function listProducts(req, res) {
     res.send("List of products");
 }
