@@ -1,4 +1,5 @@
 const product = require('../models/products');
+const category = require('../models/category');
 // Product creation can be done by only admin/seller
 async function createProduct(req, res) {
     try {
