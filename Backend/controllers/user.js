@@ -55,13 +55,19 @@ async function loginUser(req, res) {
             isSeller: user.isSeller,
             token: generateToken(user._id)
         });
+       
     }else {
         res.status(401).json({ message: 'Invalid email or password' });
     }
        
 }
 async function getUserProfile(req, res) {
-    
+    const user = await User.findById(req.user.id).select('-passwordHash');
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404).json({ message: 'User not found' });
+  }
 }
 
 module.exports = {

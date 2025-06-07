@@ -18,5 +18,13 @@ async function protect(req,res,next){
         res.status(401).json({ message: 'Not authorized, token failed' });
     }
 }
+// Middleware to check if the user is a seller
+async function seller(req, res, next) {
+    if (req.user && req.user.isSeller) {
+        next();
+    } else {
+        res.status(403).json({ message: 'Not authorized as an admin' });
+    }
+}
 
-module.exports = { protect };
+module.exports = { protect , seller };
