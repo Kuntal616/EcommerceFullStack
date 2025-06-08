@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema({
   discount: {type:Number, default:0},
   category: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category'
+    ref: 'category'
   },
   countInStock: {type:Number, required:true, min:0},
   rating: Number,
