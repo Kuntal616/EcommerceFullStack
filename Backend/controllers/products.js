@@ -3,7 +3,10 @@ const category = require('../models/category');
 // Product creation can be done by only admin/seller
 async function createProduct(req, res) {
     try {
-       const newProduct = await product.create(req.body); 
+         const imagePaths = req.files ? req.files.map(file => file.path) : [];
+       const newProduct = await product.create({ ...req.body,
+       images: imagePaths,
+      image: imagePaths[0] || ''}); 
        res.status(201).json({newProduct, message: "Product created successfully"});
     } catch (error) {
         res.status(500).json({message: "Error creating product", error: error.message});
@@ -33,7 +36,16 @@ async function listProducts(req, res) {
 // Update product by ID
 async function updateProduct(req, res) {
    try {
-    const updatedProduct = await product.findByIdAndUpdate(req.params.id, req.body, { new: true }); 
+    const newImagePaths = req.files ? req.files.map(file => file.path) : [];
+    let updateData = { ...req.body };
+
+    // Only set images if files were uploaded
+    if (req.files && req.files.length > 0) {
+      const newImagePaths = req.files.map(file => file.path);
+      updateData.images = newImagePaths;
+      updateData.image = newImagePaths[0]; // first image as thumbnail
+    }
+    const updatedProduct = await product.findByIdAndUpdate(req.params.id, updatedFields, { new: true }); 
     if (!updatedProduct) {
         return res.status(404).json({message: "Product not found"});
     }

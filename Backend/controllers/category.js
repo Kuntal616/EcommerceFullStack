@@ -2,7 +2,8 @@ const category = require('../models/category');
 
 async function createCategory(req, res) {
     try {
-        const newCategory = await category.create(req.body);
+        const imageUrl = req.file ? req.file.path : '';
+        const newCategory = await category.create({...req.body,image: imageUrl});
         res.status(201).json({
             success: true,
             message: "Category created successfully",
@@ -59,7 +60,12 @@ async function getCategoryByID (req,res){
 }
 async function updateCategory (req,res){
     try {
-        const updatedCategory = await category.findByIdAndUpdate(req.params.id,req.body,{new:true});
+          const imageUrl = req.file ? req.file.path : undefined;
+           const updatedData = {
+      ...req.body,
+      ...(imageUrl && { image: imageUrl }) // only overwrite image if new one uploaded
+    };
+        const updatedCategory = await category.findByIdAndUpdate(req.params.id,updatedData,{new:true});
         if (!updatedCategory) {
             return res.status(404).json({
                 success: false,
